@@ -1,6 +1,0 @@
-
-title: Terrain Website
-description: This is our CS184 Final Project website about making a procedural terrain look visually appealing.
-remote_theme: pages-themes/merlot@v0.2.0
-plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
