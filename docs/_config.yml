@@ -1,6 +1,6 @@
 title: Terrain Website
 description: >
-  Making a procedural terrain look visually appealing.
+  Making a procedural terrain look more visually appealing.
   
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://zackoon.github.io/" # the base hostname & protocol for your site, e.g. http://example.com

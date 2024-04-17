@@ -7,6 +7,120 @@ layout: default
     <title>Infinite Terrain Simulator</title>
 </head>
 <body>
-    <h1>TBA</h1>
+    <h1>
+        Current Progress
+    </h1>
+        <iframe width="100%" height="315" 
+        src="https://www.youtube.com/embed/5cKU6L0UcPE?si=6pBejBGgr6_RilI-" 
+        title="Terrain Generation Milestone" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+        </iframe>
+        <p><strong><a href="https://docs.google.com/presentation/d/1uCQZmVvqS70KC6rM_cbbmaof_xrevr65ELIhiXOsm4s/edit?usp=sharing">
+            Link to our slides can be found here.
+        </a></strong></p>
+    <h1>
+        Preliminary Results
+    </h1>
+        <p>Currently we have implemented:</p>
+        <ul>
+            <li>Additional character movement (i.e. up and down controls)</li>
+            <li>Fog shaders (linear, exponential, and exponential squared)</li>
+            <li>Color interpolation between objects of differing heights to smooth out transitions</li>
+            <li>A plane of water</li>
+            <li>A random Perlin noise generator to simulate different heightmap terrains</li>
+        </ul>
+    <h1>
+        Reflection on Current Progress
+    </h1>
+        <p>Understanding and implementing new code into the codebase took longer than expected; however, we are ahead of schedule due to starting from an existing repository!</p>
+        <p>We also had to figure out how to bind the different custom shaders per group of vertices, as well as how to process the vertices being generated (e.g. some vertex positions correspond to water, and the water surface must be rendered separately from the terrain).</p></p>
+        <p>From here, we plan on:</p>
+        <ul>
+            <li>Adding grass, which has been a challenge due to objects between chunks having their own relative origin</li>
+            <li>Adding realistic snow texture or some particle effect like rain or snow.</li>
+            <li>Increasing the contrast and improving the color/lighting choices for our terrain blending</li>
+            <li>Adding details to the water shader such as reflections, refractions, and transparency. The z-fighting will need to be addressed as well.</li>
+        </ul>
+
+        <p>Overall, progress is looking upwards now that we have a greater understanding of OpenGL techniques.</p>
+    <h1>
+        Revised Schedule
+        <h3>
+            Week 1
+        </h3>
+        <ul>
+            <li>
+                Learn up to and including model loading in OpenGL
+            </li>
+            <li>
+                Understand the tutorial in rendering and generating the terrain
+                <ul>
+                    <li>
+                        <a
+                            href="https://www.youtube.com/watch?v=qChQrNWU9Xw&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&index=37">Procedural
+                            Terrain Tutorial</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Start identifying which portions each team member will add
+            </li>
+        </ul>
+        <h3>
+            Week 2
+        </h3>
+        <ul>
+            <li>
+                Begin coding using <a href="https://github.com/LiamHz/atlas">LiamHz's "Atlas" repository</a>
+            </li>
+            <li>
+
+            </li>
+            <li>
+                Add coloring based on height
+            </li>
+            <li>
+                Start figuring out how to load models into the terrain (fit certain conditions + add randomness)
+            </li>
+        </ul>
+        <h3>
+            Week 3
+        </h3>
+        <ul>
+            <li>
+                Modify code from week 2 to go from coloring -> assets such as grass, rocky terrain, etc.
+            </li>
+            <li>
+                Continue loading models into the terrain
+            </li>
+            <li>
+                Continue working on the water shaderr
+            </li>
+        </ul>
+        <h3>
+            Week 4
+        </h3>
+        <ul>
+            <li>
+                Work on shaders for certain assets if needed
+            </li>
+            <li>
+                Film as needed
+            </li>
+        </ul>
+    </h1>
+
+    <h1>
+        Additional Resources
+    </h1>
+    <ul>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HusvGeEDU_U">Water Shader Tutorial</a>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=oQksg57qsRA">Fog Shader Tutorial</li>
+        </li>
+    </ul>
+    
 </body>
 </html>
