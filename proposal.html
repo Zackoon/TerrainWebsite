@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS 184 Final Project Proposal</title>
+</head>
+
+<body>
+    <h1>Summary and Team Members</h1>
+    We plan on creating an infinite terrain effect. There will be mountains, water, grass, and snow, users will be able
+    to move around the infinite landscape.
+
+    <h4>
+        Built by Ian Dong, Zack Oon, Colin Steidtmann, and Satvik Muddana.
+    </h4>
+
+    <h1>Problem Description</h1>
+
+    <ul>
+        <h3>
+            Problem
+        </h3>
+        <li>
+            Create a visually appealing and realistic infinite terrain effect with varying landscapes (mountains, water,
+            grass,
+            snow) that users can navigate.
+        </li>
+        <h3>
+            Importance
+        </h3>
+        <li>
+            This is important for creating immersive virtual environments in games or simulations.
+        </li>
+        <h3>
+            Challenge
+        </h3>
+        <li>
+
+            The challenge lies in generating a seamless and diverse terrain that can be explored without visible
+            repetition
+            while also ensuring smooth movement transitions between different terrain types.
+        </li>
+        <h3>
+            Proposed Solution
+        </h3>
+        <li>
+            Use procedural generation techniques to create the terrain.
+        </li>
+        <li>
+            Choose vegetation/surface material (texture) based on the elevation of the terrain (high elevation = snow,
+            low
+            elevation = water).
+        </li>
+        <li>
+            Use a streaming approach to load terrain data efficiently, prioritizing chunks that are closer to the user's
+            current
+            position.
+        </li>
+        <li>
+            Implement a control system for the user to navigate the terrain
+        </li>
+    </ul>
+    <h1>
+        Goals and Deliverables
+    </h1>
+
+    <ul>
+        <h3>
+            What We Plan to Deliver
+        </h3>
+        <li>
+            We must create an infinite terrain of mountains and valleys with the vegetation/texture defined by the
+            virtual environment elevation.
+        </li>
+        <li>
+            We must deliver a video demo that shows a fly-over of the terrain.
+        </li>
+        <li>
+            It may not look realistic, but it must be recognizable as mountains/snow/water/grass
+        </li>
+        <h3>
+            What We Hope to Deliver
+        </h3>
+        <li>
+            Aspirations:
+            <ul>
+                <li>
+                    <a href="https://www.youtube.com/watch?v=fEae1uH4HC4&ab_channel=HadrienMilano ">Infinite Terrain
+                        with Fractal Brownian Motion </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            We hope to make it look super realistic.
+        </li>
+        <li>
+            We hope to use some shading techniques to make it look more realistic.
+        </li>
+        <li>
+            We hope to add realistic clouds, perhaps clouds that the user moves through (adding rain would be a bonus).
+        </li>
+        <h3>
+            Measuring our Performance
+        </h3>
+        <li>
+            Speed of loading new terrain chunks. We hope for it to be constant throughout, not slow down for any reason
+            no matter how much the user moves through the virtual world. We hope for it to be fast.
+        </li>
+        <li>
+            Measure how long we keep the simulation running (i.e. we would prune areas or somehow make far away places
+            that have already been visited take up less space?)
+        </li>
+    </ul>
+    <h1>
+        Schedule
+        <h3>
+            Week 1
+        </h3>
+        <ul>
+            <li>
+                Learn up to and including model loading in OpenGL
+            </li>
+            <li>
+                Understand the tutorial in rendering and generating the terrain
+                <ul>
+                    <li>
+                        <a
+                            href="https://www.youtube.com/watch?v=qChQrNWU9Xw&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&index=37">Procedural
+                            Terrain Tutorial</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Create a window that will display a plane perturbed by a given height map (each do on our own)
+            </li>
+        </ul>
+        <h3>
+            Week 2
+        </h3>
+        <ul>
+            <li>
+                Start coding
+            </li>
+            <li>
+                Develop a program that generates an infinite terrain (height map) from a perlin noise function
+            </li>
+            <li>
+                Add coloring based on height
+            </li>
+            <li>
+                Start figuring out how to load models into the terrain (fit certain conditions + add randomness)
+            </li>
+        </ul>
+        <h3>
+            Week 3
+        </h3>
+        <ul>
+            <li>
+                Modify code from week 2 to go from coloring -> assets such as grass, rocky terrain, etc.
+            </li>
+            <li>
+                Continue loading models into the terrain
+            </li>
+        </ul>
+        <h3>
+            Week 4
+        </h3>
+        <ul>
+            <li>
+                Work on shaders for certain assets if needed
+            </li>
+            <li>
+                Film as needed
+            </li>
+        </ul>
+    </h1>
+
+    <h1>
+        Resources
+    </h1>
+    <ul>
+        <li>
+            <a href="https://learnopengl.com/Model-Loading/Assimp">Learn OpenGL (up to & incoming model loading)</a>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <a href="https://www.youtube.com/watch?v=VS8wlS9hF8E&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP">Game
+                Development in OpenGL</a>
+            <ul>
+                <li>
+                    Though it already has a backend + starting point, so we might just use this as inspiration rather
+                    than following along, as we will be starting from scratch.
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            We have some elementary blender experience, but free models as well can be found online on itch.io or planning on this <a href="https://www.google.com/url?q=https://korveen.itch.io/lowpoly-environment-pack/download/eyJpZCI6MTc0MjM2LCJleHBpcmVzIjoxNzEyMTAxMzM1fQ%253d%253d.13rYB41v%252f5ieJdTirksKSSzv5wU%253d&sa=D&source=docs&ust=1713323290167999&usg=AOvVaw1sU3Hns1dJshqlOMMQeFns">this one</a> (the assets are .obj files).
+        </li>
+    </ul>
+    <ul>
+        <a href="https://www.redblobgames.com/maps/terrain-from-noise/">Example of using noise functions to generate terrains</a>
+    </ul>
+    <ul>
+        <li>
+            <a href="https://rtouti.github.io/graphics/perlin-noise-algorithm">Perlin Noise Background Theory</a>
+        </li>
+    </ul>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
