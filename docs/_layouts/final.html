@@ -236,7 +236,48 @@ layout: default
     </div>
 
     <h2>Skybox</h2>
-
+    <p>
+        Our skybox implementation incorporates creating a cubemap and sampling pixels each of the different faces. For
+        context, a cubemap takes in 6 individual images of a scene from the same fixed position but in 6 different
+        directions. the field of view of these images is 90 degrees both horizontally and vertically and thus can get a
+        scene in all directions. The 6 images are stitched together to create a single texture.
+    </p>
+    <p>
+        In our implementation, we first needed the 6 images of the skybox and we created a helper function to load them
+        in and bind them to the proper texture target. Because a cubemap has 6 texture, we had to call glTexImage2D 6
+        times with their parameters set as well as telling OpenGL which side of the cubemap we are building the texture
+        for. We also needed to set the wrapping method to GL_CLAMP_TO_EDGE because there may be a case where the texture
+        coordinate is exactly between two faces. We then load the skybox as a cubemap with cubemapTexture as its id and
+        finally bind it to a cube.
+    </p>
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/cube-map.png" alt="">
+    </div>
+    <p>
+        We then created a skybox shader that would sample the cubemap and render the skybox. We passed in the view and
+        projection matrices to the shader and used the view matrix to remove the translation component so that the
+        skybox would always be centered around the camera. We then used the projection matrix to project the skybox onto
+        the screen and then sample the cubemap based on the direction of the camera and used the texture coordinates to
+        get the color of the pixel. The input texture coordinate is teh world space coordinate of the vertex
+        coordinates. Because our skybox is rendered behind everything else, we can do a trick where we render the skybox
+        last and every pixel of the skybox has z-value of 1 so these pixels will draw to the buffer where there has not
+        been a pixel drawn into it. Effectively, the skybox will draw where there isn't anything already drawn. To
+        ensure that the z-value is always 1, we set z-value in clip space to be the same as the w-value because then
+        when the vertices are converted into normalized device coordinates the x, y, and z coordinates are all divided
+        by w.
+    </p>
+    <p>
+        In order to actually draw the cube, we will need another VAO, VBO, and a fresh set of vertices so we utilized a
+        provided vertex data on LearnOpenGL. We needed to change the depth test to equal so that values equal to the
+        depth buffer will also be overwritten. Next, because we do not want the camera to translate at all we will
+        remove the translation section by taking the upper-left 3x3 matrix and convert it back into a 4x4 matrix.
+    </p>
+    <p>
+        Some difficulties we encountered as that sometimes the faces would be rendered but have dotted pixels instead of
+        the actual texture. This meant the ordering of our textures were incorrect and needed to be adjusted. Other
+        times there would be clear distinct lines in between the faces which meant the orientation of the faces were
+        incorrect and the images needed to be rotated around.
+    </p>
 
     <h1>
         Final Results
