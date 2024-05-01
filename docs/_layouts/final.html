@@ -32,7 +32,7 @@ layout: default
     <h1>
         Technical Approach
     </h1>
-    <h2>Context and Where we Started From</h2>
+    <h2>Context and Where We Started From</h2>
     <p>Before delving into the technical details of our implementation,
         here's some relevant context about the original author's procedural terrain implementation.
     </p>
@@ -63,9 +63,11 @@ layout: default
         color via linear interpolation. This is referred to as “linear” fog and the fog factor was simply the ratio
         between the distance of the pixel to the camera over the entire rendering distance. Any pixels beyond the
         maximum rendering distance would get the color of the fog. Everything in between would be linearly interpolated.
-        Thus, the fog factor is based on the ratio of the fragment to the camera to the chunk render distance.
+        Thus, the fog factor is based on the ratio of the fragment to the camera to the chunk render distance. Here is the linear fog shader:
     </p>
-
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/linear-fog.gif" alt="Linear Fog">
+    </div>
     <p>
         Then, we decided to build upon this linear fog with more advanced shading where the fog increases exponentially
         as we move away from the camera. This would create a more dramatic effect at a certain rendering distance as the
@@ -73,11 +75,13 @@ layout: default
         \(\frac{1}{e^{\text{distance} * \text{density}}}\). The density number is simply a way to tune the fog up or
         down. We used a similar approach from before
         to calculate the distance from the pixel to the camera. Finally, we used another approach for the fog factor
-        which was 1/(e^distance * density^2). This would create an effect where closer to the camera there would be less
+        which was \(\frac{1}{e^{(\text{distance} * \text{density})^2}}\). This would create an effect where closer to the camera there would be less
         fog but drops sharply and levels off as the distance increases. This gives a more natural feel as the fog is not
-        as dominating closer to the camera compared to the exponential fog.
+        as dominating closer to the camera compared to the exponential fog. Here is the exponential squared fog:
     </p>
-
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/exponential-squared-fog.gif" alt="Exponential Squared Fog">
+    </div>
     <p>
         We combined each of these fog shaders into a single .frag and .vert files and created keyboard toggles to select
         the shader we wanted. The entire pipeline included getting the vertex position, normals, and colors from each
@@ -317,17 +321,19 @@ layout: default
     <h3>Satvik</h3>
     <p>
         Grass Instancing Debugging
-        <ul>
-            <li>
-                Satvik assisted in debugging an issue with the grass rendering, where it appeared as 2D lines at certain angles. By adding more grass images/billboards and adjusting the vertex output, he helped resolve the issue
-            </li>
-        </ul>
-        Snowy Grass Instancing
-        <ul>
-            <li>
-                Building on the grass implementation, the grass now renders with a certain probability, adding a more natural and varied appearance to the snowy landscape.
-            </li>
-        </ul>
+    <ul>
+        <li>
+            Satvik assisted in debugging an issue with the grass rendering, where it appeared as 2D lines at certain
+            angles. By adding more grass images/billboards and adjusting the vertex output, he helped resolve the issue
+        </li>
+    </ul>
+    Snowy Grass Instancing
+    <ul>
+        <li>
+            Building on the grass implementation, the grass now renders with a certain probability, adding a more
+            natural and varied appearance to the snowy landscape.
+        </li>
+    </ul>
     </p>
 
 </body>
