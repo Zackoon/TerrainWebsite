@@ -51,7 +51,7 @@ layout: default
         program startup. Since a given terrain location is classified by height, we can post-process the
         generated terrain vertices to identify where the water should be.</p>
     <div class="cropped-image">
-        <img src="../_assets/images/pre-water.png" alt="Original water">
+        <img src="/docs/assets/images/pre-water.png" alt="Original water">
     </div>
     <p>After determining the general location of the water, how do we actually create the water?
         There are a couple options, one of which is a single plane that runs through the whole mesh
@@ -61,7 +61,7 @@ layout: default
         for a given breadth first traversal (as water vertices can be disconnected into “islands”).
         This is not only less wasteful, but solves a texturing issue covered in the next section.</p>
     <div class="cropped-image">
-        <img src="../_assets/images/water-plane.png" alt="Water plane included">
+        <img src="/docs/assets/images/water-plane.png" alt="Water plane included">
     </div>
     <p>There were also issues with supporting how the terrain is rendered chunk-by-chunk.
         Vertices are defined locally to an origin (the center of a chunk) and thus an object-to-world
@@ -87,7 +87,7 @@ layout: default
         texture map for a water plane and achieve our desired effect.
     </p>
     <div class="cropped-image">
-        <img src="../_assets/images/water-reflect.png" alt="Water with reflection and refraction">
+        <img src="/docs/assets/images/water-reflect.png" alt="Water with reflection and refraction">
     </div>
 
     <h3>Distortion</h3>
@@ -96,7 +96,7 @@ layout: default
         distortion as a function of how many renders have occurred % 1.0, to cycle the movement.</p>
     <p> With a little bit of finishing touches (and the cube map explained below), here's what we get!</p>
     <div class="cropped-image">
-        <img src="../_assets/gifs/water/TerrainWater.gif" alt="Moving water">
+        <img src="/docs/assets/gifs/water/TerrainWater.gif" alt="Moving water">
     </div>
 
 
