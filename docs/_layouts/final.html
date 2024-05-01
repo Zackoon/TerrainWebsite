@@ -3,125 +3,139 @@ layout: default
 ---
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Infinite Terrain Simulator</title>
     <style>
         .cropped-image {
-          max-width: 670px;
-          overflow: hidden;
+            max-height: 75%;
+            max-width: 75%;
+            overflow: hidden;
         }
     </style>
 </head>
+
 <body>
     <h1>
-        Abstract 
+        Abstract
     </h1>
-        <p>Starting from <a src="https://www.google.com/url?q=https://github.com/LiamHz/atlas&sa=D&source=docs&ust=1714524423622355&usg=AOvVaw2r2nou5ItMO3o8DSEcP5jz">
-            Atlas</a>, a Github repository by LiamHz, that procedurally generated terrain, our team worked together 
-            to make the visuals pop. Beginning with no OpenGL experience, over the course of April, we implemented various user 
-            controls, fog effects, blending, skyboxes, grass instancing, and reflective and refractive water. We hope that you enjoy
-             the visuals!</p>
+    <p>Starting from <a
+            src="https://www.google.com/url?q=https://github.com/LiamHz/atlas&sa=D&source=docs&ust=1714524423622355&usg=AOvVaw2r2nou5ItMO3o8DSEcP5jz">
+            Atlas</a>, a Github repository by LiamHz, which procedurally generated terrain, our team worked together
+        to make the visuals pop. Beginning with no OpenGL experience, over the course of a month in April, we implemented various
+        user
+        controls, fog effects, blending, skyboxes, grass instancing, and reflective and refractive water. We hope that
+        you enjoy
+        the visuals!</p>
     <h1>
         Technical Approach
     </h1>
-       <h2>Context and Where we Started From</h2>
-            <p>Before delving into the technical details of our implementation, 
-                here’s some relevant context about the original author’s procedural terrain implementation. 
-            </p>
-            <ul>
-                <li>The terrain is generated in chunks. For example, a large map may be represented by a 10 x 10 grid, with each fixed grid size composed of a mesh chunk (a “terrain chunk”).</li>
-                <li>A given terrain chunk is a single mesh, with varied colors to represent different surfaces such as water, grass, rock, and snow. </li>
-                <li>The surfaces are classified (and colored) based on their height proportional to max height size.</li>
-                <li>The world generation can be changed by providing different parameters relating to the Perlin noise and size of the map.</li>
-            </ul>
-       <h2>Fog</h2>
-       <h2>Grass</h2>
-       <h2>Water</h2>
-            <h3>Positioning</h3>
-                <p>At the start, water was represented in the terrain by blue portions of the terrain mesh. The first step to 
-                    enhancing the world's representation of water includes creating a water mesh separate from the large terrain
-                     mesh, allowing us to incorporate custom shaders. However, the locations of water are only known after 
-                     program startup. Since a given terrain location is classified by height, we can post-process the 
-                     generated terrain vertices to identify where the water should be.</p>
-                <div class="cropped-image">
-                    <img src="/docs/assets/images/pre-water.png" alt="Original water">
-                </div>
-                <p>After determining the general location of the water, how do we actually create the water? 
-                    There are a couple options, one of which is a single plane that runs through the whole mesh 
-                    (as displayed in our milestone), while a second, more efficient option would be to find a bounding box 
-                    for a given “island” of water vertices. In the beginning, they will look nearly identical 
-                    (the image below goes with the 1st option). To implement the latter option, we compute the min and max corners 
-                    for a given breadth first traversal (as water vertices can be disconnected into “islands”). 
-                    This is not only less wasteful, but solves a texturing issue covered in the next section.</p>
-                <div class="cropped-image">
-                    <img src="../assets/images/water-plane.png" alt="Water plane included">
-                </div>
-                <p>There were also issues with supporting how the terrain is rendered chunk-by-chunk.  
-                    Vertices are defined locally to an origin (the center of a chunk) and thus an object-to-world 
-                    coordinate matrix must be calculated. We adopt the original author’s design, creating an array
-                    of Vertex Array Objects (VAOs) which hold the relevant chunk’s water planes, and based on the index 
-                    of the VAO, we calculate the corresponding transformation. </p>
-                <p>Z-fighting between the terrain and water plane was addressed by scaling down the heights of the terrain
-                     water vertices and increasing the heights of the rest of the vertices.</p>
-                    
-            <h3>Texturing</h3>
-                <p>With the water plane now set, we now move towards implementing the reflection and refraction effects 
-                    on the water. This section and the next section of the water implementation follows 
-                    <a src="https://www.youtube.com/watch?v=21UsMuFTN0k&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh&index=2"> this tutorial
-                    series by ThinMatrix </a>, up to and including the Fresnel effect (varying refraction/reflection based on camera position).</p>
-                <p>The idea is that we create two additional Frame Buffer Objects (FBOs), separate from the default display. 
-                    One FBO will correspond to reflections and the other will correspond to refractions — both will be used as 
-                    textures. For the reflection texture, we reflect our camera along the axis of the water plane and render how 
-                    the terrain and sky box appear. For our refraction texture, it will take the same rendering of the terrain as 
-                    our display FBO. After rendering the transformed scene to each of these FBOs, we can use these renderings as a 
-                    texture map for a water plane and achieve our desired effect.
-                </p>
-                <div class="cropped-image">
-                    <img src="../_assets/images/water-reflect.png" alt="Water with reflection and refraction">
-                </div>
+    <h2>Context and Where we Started From</h2>
+    <p>Before delving into the technical details of our implementation,
+        here's some relevant context about the original author's procedural terrain implementation.
+    </p>
+    <ul>
+        <li>The terrain is generated in chunks. For example, a large map may be represented by a 10 x 10 grid, with each
+            fixed grid size composed of a mesh chunk (a “terrain chunk”).</li>
+        <li>A given terrain chunk is a single mesh, with varied colors to represent different surfaces such as water,
+            grass, rock, and snow. </li>
+        <li>The surfaces are classified (and colored) based on their height proportional to max height size.</li>
+        <li>The world generation can be changed by providing different parameters relating to the Perlin noise and size
+            of the map.</li>
+    </ul>
+    <h2>Fog</h2>
+    <h2>Grass</h2>
+    <h2>Water</h2>
+    <h3>Positioning</h3>
+    <p>At the start, water was represented in the terrain by blue portions of the terrain mesh. The first step to
+        enhancing the world's representation of water includes creating a water mesh separate from the large terrain
+        mesh, allowing us to incorporate custom shaders. However, the locations of water are only known after
+        program startup. Since a given terrain location is classified by height, we can post-process the
+        generated terrain vertices to identify where the water should be.</p>
+    <div class="cropped-image">
+        <img src="../_assets/images/pre-water.png" alt="Original water">
+    </div>
+    <p>After determining the general location of the water, how do we actually create the water?
+        There are a couple options, one of which is a single plane that runs through the whole mesh
+        (as displayed in our milestone), while a second, more efficient option would be to find a bounding box
+        for a given “island” of water vertices. In the beginning, they will look nearly identical
+        (the image below goes with the 1st option). To implement the latter option, we compute the min and max corners
+        for a given breadth first traversal (as water vertices can be disconnected into “islands”).
+        This is not only less wasteful, but solves a texturing issue covered in the next section.</p>
+    <div class="cropped-image">
+        <img src="../_assets/images/water-plane.png" alt="Water plane included">
+    </div>
+    <p>There were also issues with supporting how the terrain is rendered chunk-by-chunk.
+        Vertices are defined locally to an origin (the center of a chunk) and thus an object-to-world
+        coordinate matrix must be calculated. We adopt the original author's design, creating an array
+        of Vertex Array Objects (VAOs) which hold the relevant chunk's water planes, and based on the index
+        of the VAO, we calculate the corresponding transformation. </p>
+    <p>Z-fighting between the terrain and water plane was addressed by scaling down the heights of the terrain
+        water vertices and increasing the heights of the rest of the vertices.</p>
 
-            <h3>Distortion</h3>
-                <p>Lastly, we make the water more convincing by adding a distortion to the texture coordinates 
-                    (for reflection and refraction), based on a dUdV map. To add movement, we can modify the
-                     distortion as a function of how many renders have occurred % 1.0, to cycle the movement.</p>
-                <p>With a little bit of finishing touches (and the cube map explained below), here’s what we get!</p>
-                <div class="cropped-image">
-                    <img src="../_assets/gifs/TerrainWater.gif" alt="Moving water">
-                </div>
-                
-        
+    <h3>Texturing</h3>
+    <p>With the water plane now set, we now move towards implementing the reflection and refraction effects
+        on the water. This section and the next section of the water implementation follows
+        <a src="https://www.youtube.com/watch?v=21UsMuFTN0k&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh&index=2"> this
+            tutorial
+            series by ThinMatrix </a>, up to and including the Fresnel effect (varying refraction/reflection based on
+        camera position).
+    </p>
+    <p>The idea is that we create two additional Frame Buffer Objects (FBOs), separate from the default display.
+        One FBO will correspond to reflections and the other will correspond to refractions — both will be used as
+        textures. For the reflection texture, we reflect our camera along the axis of the water plane and render how
+        the terrain and sky box appear. For our refraction texture, it will take the same rendering of the terrain as
+        our display FBO. After rendering the transformed scene to each of these FBOs, we can use these renderings as a
+        texture map for a water plane and achieve our desired effect.
+    </p>
+    <div class="cropped-image">
+        <img src="../_assets/images/water-reflect.png" alt="Water with reflection and refraction">
+    </div>
+
+    <h3>Distortion</h3>
+    <p>Lastly, we make the water more convincing by adding a distortion to the texture coordinates
+        (for reflection and refraction), based on a dUdV map. To add movement, we can modify the
+        distortion as a function of how many renders have occurred % 1.0, to cycle the movement.</p>
+    <p> With a little bit of finishing touches (and the cube map explained below), here's what we get!</p>
+    <div class="cropped-image">
+        <img src="../_assets/gifs/water/TerrainWater.gif" alt="Moving water">
+    </div>
+
+
     <h1>
         Final Results
     </h1>
-            <iframe width="100%" height="315" 
-            src="https://www.youtube.com/embed/5cKU6L0UcPE?si=6pBejBGgr6_RilI-" 
-            title="Terrain Generation Milestone" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-            </iframe>
-            <p><strong><a href="https://docs.google.com/presentation/d/1uCQZmVvqS70KC6rM_cbbmaof_xrevr65ELIhiXOsm4s/edit?usp=sharing">
+    <iframe width="100%" height="315" src="https://www.youtube.com/embed/5cKU6L0UcPE?si=6pBejBGgr6_RilI-"
+        title="Terrain Generation Milestone" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>
+    <p><strong><a
+                href="https://docs.google.com/presentation/d/1uCQZmVvqS70KC6rM_cbbmaof_xrevr65ELIhiXOsm4s/edit?usp=sharing">
                 Link to our slides can be found here.
             </a></strong></p>
 
     <h1>
         References
     </h1>
-        <ul>
-            <li><a href="https://www.youtube.com/watch?v=HusvGeEDU_U">Water Shader Tutorial</a></li>
-            <li><a href="https://www.youtube.com/watch?v=oQksg57qsRA">Fog Shader Tutorial</a></li>
-        </ul>
-    
+    <ul>
+        <li><a href="https://www.youtube.com/watch?v=HusvGeEDU_U">Water Shader Tutorial</a></li>
+        <li><a href="https://www.youtube.com/watch?v=oQksg57qsRA">Fog Shader Tutorial</a></li>
+    </ul>
+
     <h1>
         Contributions
     </h1>
-        <h3>Colin</h3>
+    <h3>Colin</h3>
 
-        <h3>Ian</h3>
+    <h3>Ian</h3>
 
-        <h3>Zack</h3>
-            <p>Zack worked on implementing the water. He was responsible as well 
-                for grokking the rendering scheme of the initial codebase. </p>
-        <h3>Satvik</h3>
+    <h3>Zack</h3>
+    <p>Zack worked on implementing the water. He was responsible as well
+        for grokking the rendering scheme of the initial codebase. </p>
+    <h3>Satvik</h3>
 
-    
+
 </body>
+
 </html>
