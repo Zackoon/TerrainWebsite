@@ -45,6 +45,9 @@ layout: default
         <li>The world generation can be changed by providing different parameters relating to the Perlin noise and size
             of the map.</li>
     </ul>
+    To get the original author's code running on all our machines, we cloned all its dependencies (Assimp, GLAD, GLFW,
+    GLM, and stb) and brought them locally into the project. Additionally, we created a CMake file to compile and link
+    everything together.
     <h2>Fog</h2>
     <p>
         At a high level overview, fog is an environmental effect that interferes with the normal sight of line which
@@ -93,26 +96,74 @@ layout: default
     </p>
     <h2>Grass</h2>
     <p>
-        Put simply, we created grass by criss-crossing 2D "billboards" at every vertex on our terrain where there should be grass, and texture mapping an image of grass blades onto the billboards while filtering out parts that weren't grass blades.
+        Put simply, we created grass by criss-crossing 2D "billboards" at every vertex on our terrain where there should
+        be grass, and texture mapping an image of grass blades onto the billboards while filtering out parts that
+        weren't grass blades.
     </p>
     <p>
-        Step 1 was collecting the grass vertices. Outside of the render loop and on the CPU, we iterated through each chunk of the terrain and collected all vertices that corresponded to grass locations based on their height.
+        Step 1 was collecting the grass vertices. Outside of the render loop and on the CPU, we iterated through each
+        chunk of the terrain and collected all vertices that corresponded to grass locations based on their height.
     </p>
     <p>
-        Step 2 was associating each chunk of terrain and grass vertices to a corresponding VAO (Vertex Array Object) and VBO (Vertex Buffer Object). VAOs and VBOs are OpenGL objects used for efficient rendering of vertex data. A VBO stores the actual vertex data (positions, normals, texture coordinates, etc.) in GPU memory. A VAO is a container that stores the state of how the vertex data in the VBOs should be interpreted and mapped to the vertex shader's input attributes. We created a VAO for each chunk and stored the corresponding grass vertex data in a VBO. This setup allowed us to render the grass vertices efficiently by simply binding the corresponding VAO before drawing.
+        Step 2 was associating each chunk of terrain and grass vertices to a corresponding VAO (Vertex Array Object) and
+        VBO (Vertex Buffer Object). VAOs and VBOs are OpenGL objects used for efficient rendering of vertex data. A VBO
+        stores the actual vertex data (positions, normals, texture coordinates, etc.) in GPU memory. A VAO is a
+        container that stores the state of how the vertex data in the VBOs should be interpreted and mapped to the
+        vertex shader's input attributes. We created a VAO for each chunk and stored the corresponding grass vertex data
+        in a VBO. This setup allowed us to render the grass vertices efficiently by simply binding the corresponding VAO
+        before drawing.
     </p>
     <p>
-        Step 3 was the render loop and transformation matrices. For each frame, we computed a projection matrix, view matrix, and model matrix. The projection matrix defines the perspective projection transformation, which maps 3D coordinates from the camera's view space into 2D coordinates in the clip space (the visible region on the screen). We calculated it using glm::perspective, defining the perspective projection based on the camera's field of view, aspect ratio, and near/far clipping planes. The view matrix represents the transformation from world space to camera (view) space. It encodes the position and orientation of the camera in the world, essentially defining the camera's view. The model matrix represents the transformation from object (chunk) space to world space. Each chunk in our terrain has its own model matrix, which encodes its position and orientation in the world. More importantly, we sent all these matrices to our shader as uniform variables for it to access, and for each chunk within render distance, we bound its corresponding VAO and issued a command to glDrawArrays to draw all the VAO's corresponding vertices onto the screen. 
+        Step 3 was the render loop and transformation matrices. For each frame, we computed a projection matrix, view
+        matrix, and model matrix. The projection matrix defines the perspective projection transformation, which maps 3D
+        coordinates from the camera's view space into 2D coordinates in the clip space (the visible region on the
+        screen). We calculated it using glm::perspective, defining the perspective projection based on the camera's
+        field of view, aspect ratio, and near/far clipping planes. The view matrix represents the transformation from
+        world space to camera (view) space. It encodes the position and orientation of the camera in the world,
+        essentially defining the camera's view. The model matrix represents the transformation from object (chunk) space
+        to world space. Each chunk in our terrain has its own model matrix, which encodes its position and orientation
+        in the world. More importantly, we sent all these matrices to our shader as uniform variables for it to access,
+        and for each chunk within render distance, we bound its corresponding VAO and issued a command to glDrawArrays
+        to draw all the VAO's corresponding vertices onto the screen.
     </p>
     <p>
-        	Step 4, still inside the render loop or per frame computations, was the shaders. For each vertex that comes from glDrawArrays, OpenGL executes the vertex shader, passing the vertex data as input. Our vertex shader was simple; it simply lifted the vertex positions slightly above the surface to prevent the grass from being buried. These vertices were then passed to our geometry shader. The geometry shader is an optional stage that operates on primitives (points, lines, or triangles) and can generate new primitives. In our case, the geometry shader was responsible for creating the grass billboards. It generated a series of rectangular billboards by emitting new vertices and transforming them based on various factors, such as wind, randomness, camera distance, and grass size. Most importantly, it brought each vertex into the correct location on the screen by multiplying first by the model matrix, transforming the vertices from object (chunk) space to world space; next, it multiplied by the view matrix, transforming the vertices from world space to view (camera) space; lastly, it multiplied by the projection matrix, projecting the vertices from 3D view space onto the 2D clip space. The last part in the geometry shader was outputting the UV coordinates for the fragment shader to use, and these were simply the four normalized coordinates of each billboard that the geometry shader created. The fragment shader is executed for every pixel that needs to be rendered on the screen, and if the pixel is within one of the quads generated by our geometry shader, then the rasterizer will interpolate across the corresponding UV coordinates outputted by nearby billboard vertices and pass them to our fragment shader. In our fragment shader, we were working with a texture that was an image of grass blades with a transparent background. So our fragment shader sampled the color using the UV coordinates and checked if the sampled color had a low alpha value (high transparency), indicating a background pixel. If so, the fragment was discarded using the discard keyword; otherwise, the opaque grass color was output as the final fragment color.
+        Step 4, still inside the render loop or per frame computations, was the shaders. For each vertex that comes from
+        glDrawArrays, OpenGL executes the vertex shader, passing the vertex data as input. Our vertex shader was simple;
+        it simply lifted the vertex positions slightly above the surface to prevent the grass from being buried. These
+        vertices were then passed to our geometry shader. The geometry shader is an optional stage that operates on
+        primitives (points, lines, or triangles) and can generate new primitives. In our case, the geometry shader was
+        responsible for creating the grass billboards. It generated a series of rectangular billboards by emitting new
+        vertices and transforming them based on various factors, such as wind, randomness, camera distance, and grass
+        size. Most importantly, it brought each vertex into the correct location on the screen by multiplying first by
+        the model matrix, transforming the vertices from object (chunk) space to world space; next, it multiplied by the
+        view matrix, transforming the vertices from world space to view (camera) space; lastly, it multiplied by the
+        projection matrix, projecting the vertices from 3D view space onto the 2D clip space. The last part in the
+        geometry shader was outputting the UV coordinates for the fragment shader to use, and these were simply the four
+        normalized coordinates of each billboard that the geometry shader created. The fragment shader is executed for
+        every pixel that needs to be rendered on the screen, and if the pixel is within one of the quads generated by
+        our geometry shader, then the rasterizer will interpolate across the corresponding UV coordinates outputted by
+        nearby billboard vertices and pass them to our fragment shader. In our fragment shader, we were working with a
+        texture that was an image of grass blades with a transparent background. So our fragment shader sampled the
+        color using the UV coordinates and checked if the sampled color had a low alpha value (high transparency),
+        indicating a background pixel. If so, the fragment was discarded using the discard keyword; otherwise, the
+        opaque grass color was output as the final fragment color.
     </p>
     <p>
-        In conclusion, we used vertex, geometry, and fragment shaders to create realistic-looking grass billboards on top of a terrain. VAOs and VBOs ensured efficient rendering of the grass vertex data, while the geometry shader performed the heavy lifting of generating and transforming the billboard geometry based on various factors like wind, randomness, and camera distance. The fragment shader then applied the final touches by texture mapping the grass blades and filtering out transparent areas. While we did follow and reference two tutorials, it was still a challenge to implement because our transformation matrices had to be different from theirs due to the unique environment we started with, along with many other subtleties. We learned a lot about OpenGL and the graphics processing pipeline through this feature implementation and gained more appreciation for the even better looking grass that is commonly found in video games.
+        In conclusion, we used vertex, geometry, and fragment shaders to create realistic-looking grass billboards on
+        top of a terrain. VAOs and VBOs ensured efficient rendering of the grass vertex data, while the geometry shader
+        performed the heavy lifting of generating and transforming the billboard geometry based on various factors like
+        wind, randomness, and camera distance. The fragment shader then applied the final touches by texture mapping the
+        grass blades and filtering out transparent areas. While we did follow and reference two tutorials, it was still
+        a challenge to implement because our transformation matrices had to be different from theirs due to the unique
+        environment we started with, along with many other subtleties. We learned a lot about OpenGL and the graphics
+        processing pipeline through this feature implementation and gained more appreciation for the even better looking
+        grass that is commonly found in video games.
     </p>
     <h2>Snowy Grass</h2>
     <p>
-        Our snowy grass takes a lot of inspiration from the regular grass. Although the texture is different, the shader is very similar. The most significant change was making the snowy grass render sparsely with a set probability for a more realistic appearance.
+        Our snowy grass takes a lot of inspiration from the regular grass. Although the texture is different, the shader
+        is very similar. The most significant change was making the snowy grass render sparsely with a set probability
+        for a more realistic appearance.
 
     </p>
     <h2>Water</h2>
@@ -124,7 +175,7 @@ layout: default
         program startup. Since a given terrain location is classified by height, we can post-process the
         generated terrain vertices to identify where the water should be.</p>
     <div class="cropped-image">
-        <img src="../assets/images/pre-water.png" alt="Original water">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/pre-water.png" alt="Original water">
     </div>
     <p>After determining the general location of the water, how do we actually create the water?
         There are a couple options, one of which is a single plane that runs through the whole mesh
@@ -134,7 +185,7 @@ layout: default
         for a given breadth first traversal (as water vertices can be disconnected into “islands”).
         This is not only less wasteful, but solves a texturing issue covered in the next section.</p>
     <div class="cropped-image">
-        <img src="/docs/assets/images/water-plane.png" alt="Water plane included">
+        <img src="" alt="Water plane included">
     </div>
     <p>There were also issues with supporting how the terrain is rendered chunk-by-chunk.
         Vertices are defined locally to an origin (the center of a chunk) and thus an object-to-world
@@ -197,9 +248,25 @@ layout: default
     <h1>
         Contributions
     </h1>
-    <h3>Colin</h3>
-
     <h3>Ian</h3>
+    <p>
+        User Controls
+    <ul>
+        <li>
+            Ian helped set up some initial controls and added key bind toggles for each of the new shading that other
+            team members implemented to see each of them separately and debug more efficiently.
+        </li>
+    </ul>
+    World Generation
+    <ul>
+        <li>
+            He tweaked the Perlin noise generation and set a random seed based on the date so that each time a new world
+            would be randomly generated with different heights.
+        </li>
+    </ul>
+
+    </p>
+    <h3>Colin</h3>
 
     <h3>Zack</h3>
     <p>Zack worked on implementing the water. He was responsible as well
