@@ -8,18 +8,23 @@ layout: default
     <title>Infinite Terrain Simulator</title>
     <style>
         .cropped-image {
-            max-height: 25%;
-            max-width: 25%;
+            max-height: 50%;
+            max-width: 50%;
+            overflow: hidden;
         }
     </style>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
 </head>
 
 <body>
     <h1>
         Abstract
     </h1>
-    <p>Starting from the <a href="https://github.com/LiamHz/atlas">Atlas repository</a>, a Github repository by LiamHz, which procedurally generated terrain, our team worked together
-        to make the visuals pop. Beginning with no OpenGL experience, over the course of a month in April, we implemented various
+    <p>Starting from the <a href="https://github.com/LiamHz/atlas">Atlas repository</a>, a Github repository by LiamHz,
+        which procedurally generated terrain, our team worked together
+        to make the visuals pop. Beginning with no OpenGL experience, over the course of a month in April, we
+        implemented various
         user
         controls, fog effects, blending, skyboxes, grass instancing, and reflective and refractive water. We hope that
         you enjoy
@@ -41,6 +46,51 @@ layout: default
             of the map.</li>
     </ul>
     <h2>Fog</h2>
+    <p>
+        At a high level overview, fog is an environmental effect that interferes with the normal sight of line which
+        would absorb and scatter the light rays reflected off of objects. This means that each of the vertices would
+        need to be a mix of its current color as well as the fog color. Core fog parameters include the distance between
+        each pixel and the camera, the fog color, as well as fog density. At farther distances, objects tend to “hide”
+        behind the fog which would mean that the pixels would blend in more with the natural fog color instead of its
+        original color. We defined a fog factor based on the distance away from the camera and it was 1 there would be
+        no fog and would just be the pixel color while as the fog factor decreased to 0 the fog color would take over.
+    </p>
+    <p>
+        At first, we implemented a simple shader to render fog for our scene by blending the pixel color with the fog
+        color via linear interpolation. This is referred to as “linear” fog and the fog factor was simply the ratio
+        between the distance of the pixel to the camera over the entire rendering distance. Any pixels beyond the
+        maximum rendering distance would get the color of the fog. Everything in between would be linearly interpolated.
+        Thus, the fog factor is based on the ratio of the fragment to the camera to the chunk render distance.
+    </p>
+
+    <p>
+        Then, we decided to build upon this linear fog with more advanced shading where the fog increases exponentially
+        as we move away from the camera. This would create a more dramatic effect at a certain rendering distance as the
+        objects become more fully immersed in the fog. The first formula for the fog factor we used was 1/(e^distance *
+        density). The density number is simply a way to tune the fog up or down. We used a similar approach from before
+        to calculate the distance from the pixel to the camera. Finally, we used another approach for the fog factor
+        which was 1/(e^distance * density^2). This would create an effect where closer to the camera there would be less
+        fog but drops sharply and levels off as the distance increases. This gives a more natural feel as the fog is not
+        as dominating closer to the camera compared to the exponential fog.
+    </p>
+
+    <p>
+        We combined each of these fog shaders into a single .frag and .vert files and created keyboard toggles to select
+        the shader we wanted. The entire pipeline included getting the vertex position, normals, and colors from each
+        pixel and then calculating the fog factor in the .frag file based on the distance and appropriate exponential
+        function if necessary. Afterwards, based on this fog factor we would mix the pixel color and the fog color and
+        use this as the new fragment color. If fog is not enabled, we set the fragment color as the original pixel
+        color.
+    </p>
+    <p>
+        We ran into some issues with the fog implementation as initially the shader would make everything black. To
+        debug, we pushed the newly calculated fog factors into the color to see what the output would be and realized
+        that it was 0 and thus caused the black colors to appear. To fix this, we had to change what the passed in
+        rendering distance was into the .vert file and we used the max between the width and height multiplied by the
+        chunk distance as this was how far the camera was able to see. There were also some issues where the color would
+        turn magenta and we noticed that the fog factor was greater than 1 so we had to clamp the fog factor. Through
+        this trial and error, we learned how to debug in GLSL files to get what we needed.
+    </p>
     <h2>Grass</h2>
     <h2>Water</h2>
     <h3>Positioning</h3>
