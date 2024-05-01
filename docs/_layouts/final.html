@@ -69,7 +69,9 @@ layout: default
     <p>
         Then, we decided to build upon this linear fog with more advanced shading where the fog increases exponentially
         as we move away from the camera. This would create a more dramatic effect at a certain rendering distance as the
-        objects become more fully immersed in the fog. The first formula for the fog factor we used was \(\frac{1}{e^{\text{distance} * \text{density}}}\). The density number is simply a way to tune the fog up or down. We used a similar approach from before
+        objects become more fully immersed in the fog. The first formula for the fog factor we used was
+        \(\frac{1}{e^{\text{distance} * \text{density}}}\). The density number is simply a way to tune the fog up or
+        down. We used a similar approach from before
         to calculate the distance from the pixel to the camera. Finally, we used another approach for the fog factor
         which was 1/(e^distance * density^2). This would create an effect where closer to the camera there would be less
         fog but drops sharply and levels off as the distance increases. This gives a more natural feel as the fog is not
@@ -176,9 +178,6 @@ layout: default
     <div class="cropped-image">
         <img src="https://zackoon.github.io/TerrainWebsite/assets/images/pre-water.png" alt="Original water">
     </div>
-    <div class="cropped-image">
-        <img src="./pre-water.png" alt="Original water">
-    </div>
     <p>After determining the general location of the water, how do we actually create the water?
         There are a couple options, one of which is a single plane that runs through the whole mesh
         (as displayed in our milestone), while a second, more efficient option would be to find a bounding box
@@ -213,7 +212,8 @@ layout: default
         texture map for a water plane and achieve our desired effect.
     </p>
     <div class="cropped-image">
-        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/water-reflect.png" alt="Water with reflection and refraction">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/water-reflect.png"
+            alt="Water with reflection and refraction">
     </div>
 
     <h3>Distortion</h3>
@@ -255,26 +255,66 @@ layout: default
         User Controls
     <ul>
         <li>
-            Ian helped set up some initial controls and added key bind toggles for each of the new shading that other
+            I helped set up some initial controls and added key bind toggles for each of the new shading that other
             team members implemented to see each of them separately and debug more efficiently.
         </li>
     </ul>
     World Generation
     <ul>
         <li>
-            He tweaked the Perlin noise generation and set a random seed based on the date so that each time a new world
+            Ian tweaked the Perlin noise generation and set a random seed based on the date so that each time a new
+            world
             would be randomly generated with different heights.
+        </li>
+    </ul>
+    Color interpolation
+    <ul>
+        <li>
+            Instead of showing individual triangles like the original project, Ian changed the flat colors so that each
+            vertex would have their individual color and the triangle would have nicely interpolation and not all be a
+            single color. Because the map would be colored based on the height, he decided to interpolate the colors to
+            create a nicer blend between each triangle instead of having distinct sharp lines.
+        </li>
+    </ul>
+    Fog Shading
+    <ul>
+        Ian implemented three different kinds of fog shading: linear, exponential, and exponential squared and smoothed
+        out the effects based on the distance from the pixel was away from the camera.
+    </ul>
+    Skybox and Cubemapping
+    <ul>
+        <li>
+            Ian worked on creating a skybox through cubemapping to sample textures to create a 3D feel surrounding our
+            terrain generated world. It helped create an illusion that the environment is way larger than it actually
+            is.
+
         </li>
     </ul>
 
     </p>
     <h3>Colin</h3>
+    <p>
+        Grass Instancing
+    <ul>
+        <li>
+            Colin helped get the initial repository set up and working on everyone's computer. Colin then added grass,
+            which was a lot more work then it sounds (ha ha).
+
+        </li>
+    </ul>
+    </p>
 
     <h3>Zack</h3>
-    <p>Zack worked on implementing the water. He was responsible as well
-        for grokking the rendering scheme of the initial codebase. </p>
+    <p>
+        Water Shader
+    <ul>
+        <li>
+            Zack worked on implementing the water. He was responsible as well
+            for grokking the rendering scheme of the initial codebase.
+        </li>
+    </ul>
+    </p>
     <h3>Satvik</h3>
-
 
 </body>
 
