@@ -8,8 +8,8 @@ layout: default
     <title>Infinite Terrain Simulator</title>
     <style>
         .cropped-image {
-            max-height: 50%;
-            max-width: 50%;
+            max-height: 25%;
+            max-width: 25%;
             overflow: hidden;
         }
     </style>
@@ -50,10 +50,9 @@ layout: default
         mesh, allowing us to incorporate custom shaders. However, the locations of water are only known after
         program startup. Since a given terrain location is classified by height, we can post-process the
         generated terrain vertices to identify where the water should be.</p>
-    <!-- <div class="cropped-image">
-        
-    </div> -->
-    <img src="../assets/images/pre-water.png" alt="Original water">
+    <div class="cropped-image">
+        <img src="../assets/images/pre-water.png" alt="Original water">
+    </div>
     <p>After determining the general location of the water, how do we actually create the water?
         There are a couple options, one of which is a single plane that runs through the whole mesh
         (as displayed in our milestone), while a second, more efficient option would be to find a bounding box
