@@ -8,8 +8,8 @@ layout: default
     <title>Infinite Terrain Simulator</title>
     <style>
         .cropped-image {
-            max-height: 50%;
-            max-width: 50%;
+            max-height: 75%;
+            max-width: 75%;
             overflow: hidden;
         }
     </style>
@@ -69,8 +69,7 @@ layout: default
     <p>
         Then, we decided to build upon this linear fog with more advanced shading where the fog increases exponentially
         as we move away from the camera. This would create a more dramatic effect at a certain rendering distance as the
-        objects become more fully immersed in the fog. The first formula for the fog factor we used was 1/(e^distance *
-        density). The density number is simply a way to tune the fog up or down. We used a similar approach from before
+        objects become more fully immersed in the fog. The first formula for the fog factor we used was \(\frac{1}{e^{\text{distance} * \text{density}}}\). The density number is simply a way to tune the fog up or down. We used a similar approach from before
         to calculate the distance from the pixel to the camera. Finally, we used another approach for the fog factor
         which was 1/(e^distance * density^2). This would create an effect where closer to the camera there would be less
         fog but drops sharply and levels off as the distance increases. This gives a more natural feel as the fog is not
@@ -175,7 +174,7 @@ layout: default
         program startup. Since a given terrain location is classified by height, we can post-process the
         generated terrain vertices to identify where the water should be.</p>
     <div class="cropped-image">
-        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/pre-water.png" alt="Original water">
+        <img src="../assets/images/pre-water.png" alt="Original water">
     </div>
     <p>After determining the general location of the water, how do we actually create the water?
         There are a couple options, one of which is a single plane that runs through the whole mesh
