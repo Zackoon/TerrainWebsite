@@ -105,6 +105,9 @@ layout: default
         be grass, and texture mapping an image of grass blades onto the billboards while filtering out parts that
         weren't grass blades.
     </p>
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/images/grass-billboard.png" alt="">
+    </div>
     <p>
         Step 1 was collecting the grass vertices. Outside of the render loop and on the CPU, we iterated through each
         chunk of the terrain and collected all vertices that corresponded to grass locations based on their height.
@@ -320,20 +323,12 @@ layout: default
     </p>
     <h3>Satvik</h3>
     <p>
-        Grass Instancing Debugging
-    <ul>
-        <li>
-            Satvik assisted in debugging an issue with the grass rendering, where it appeared as 2D lines at certain
-            angles. By adding more grass images/billboards and adjusting the vertex output, he helped resolve the issue
-        </li>
-    </ul>
-    Snowy Grass Instancing
-    <ul>
-        <li>
-            Building on the grass implementation, the grass now renders with a certain probability, adding a more
-            natural and varied appearance to the snowy landscape.
-        </li>
-    </ul>
+        Snowy Grass Instancing
+        <ul>
+            <li>
+                Satvik helped with getting the crisscrossing of 2D grass billboards to render. He also added snowy grass.
+            </li>
+        </ul>
     </p>
 
 </body>
