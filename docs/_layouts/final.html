@@ -63,7 +63,8 @@ layout: default
         color via linear interpolation. This is referred to as “linear” fog and the fog factor was simply the ratio
         between the distance of the pixel to the camera over the entire rendering distance. Any pixels beyond the
         maximum rendering distance would get the color of the fog. Everything in between would be linearly interpolated.
-        Thus, the fog factor is based on the ratio of the fragment to the camera to the chunk render distance. Here is the linear fog shader:
+        Thus, the fog factor is based on the ratio of the fragment to the camera to the chunk render distance. Here is
+        the linear fog shader:
     </p>
     <div class="cropped-image">
         <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/linear-fog.gif" alt="Linear Fog">
@@ -75,12 +76,14 @@ layout: default
         \(\frac{1}{e^{\text{distance} * \text{density}}}\). The density number is simply a way to tune the fog up or
         down. We used a similar approach from before
         to calculate the distance from the pixel to the camera. Finally, we used another approach for the fog factor
-        which was \(\frac{1}{e^{(\text{distance} * \text{density})^2}}\). This would create an effect where closer to the camera there would be less
+        which was \(\frac{1}{e^{(\text{distance} * \text{density})^2}}\). This would create an effect where closer to
+        the camera there would be less
         fog but drops sharply and levels off as the distance increases. This gives a more natural feel as the fog is not
         as dominating closer to the camera compared to the exponential fog. Here is the exponential squared fog:
     </p>
     <div class="cropped-image">
-        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/exponential-squared-fog.gif" alt="Exponential Squared Fog">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/exponential-squared-fog.gif"
+            alt="Exponential Squared Fog">
     </div>
     <p>
         We combined each of these fog shaders into a single .frag and .vert files and created keyboard toggles to select
@@ -232,10 +235,41 @@ layout: default
         <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/water/TerrainWater.gif" alt="Moving water">
     </div>
 
+    <h2>Skybox</h2>
+
 
     <h1>
         Final Results
     </h1>
+    Here are some of the final results of our project:
+    <h2>
+        Fog Shading
+    </h2>
+    <p>
+        Here are some gifs of the fog shading in action. The first is linear fog, the second is exponential fog, and the
+        third
+        is exponential squared fog.
+    </p>
+
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/linear-fog.gif" alt="Linear Fog">
+    </div>
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/exponential-fog.gif" alt="Exponential Fog">
+    </div>
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/fog/exponential-squared-fog.gif"
+            alt="Exponential Squared Fog">
+    </div>
+    <p>
+        Here is a gif of the grass instancing in action. The grass is crisscrossed and the snowy grass is added on top.
+    </p>
+    <div class="cropped-image">
+        <img src="https://zackoon.github.io/TerrainWebsite/assets/gifs/grass/grass.gif" alt="Grass">
+    </div>
+    <p>
+        Here is a gif of the water shader in action. The water is reflective and refractive and has a distortion effect.
+    </p>
     <!-- <iframe width="100%" height="315" src="https://www.youtube.com/embed/5cKU6L0UcPE?si=6pBejBGgr6_RilI-"
         title="Terrain Generation Milestone" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -253,9 +287,11 @@ layout: default
         <li><a href="https://github.com/LiamHz/atlas">Atlas Github Repository by LiamHz</a></li>
         <li><a href="https://www.youtube.com/watch?v=oQksg57qsRA">Fog Shader Tutorial</a></li>
         <li><a href="https://learnopengl.com/Getting-started/Shaders">LearnOpenGL Shaders</a></li>
-        <li><a href="https://www.mbsoftworks.sk/tutorials/opengl3/29-terrain-pt2-waving-grass/">Grass Tutorial 1</a></li>
+        <li><a href="https://www.mbsoftworks.sk/tutorials/opengl3/29-terrain-pt2-waving-grass/">Grass Tutorial 1</a>
+        </li>
         <li><a href="https://vulpinii.github.io/tutorials/grass-modelisation/en/">Grass Tutorial 2</a></li>
-        <li><a href="https://www.youtube.com/watch?v=21UsMuFTN0k&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh&index=2">ThinMatrix Water Tutorial</a></li>
+        <li><a href="https://www.youtube.com/watch?v=21UsMuFTN0k&list=PLRIWtICgwaX23jiqVByUs0bqhnalNTNZh&index=2">ThinMatrix
+                Water Tutorial</a></li>
         <li><a href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">LearnOpenGL Cubemap Tutorial</a></li>
         <li><a href="https://www.youtube.com/watch?v=8sVvxeKI9Pk">Skymap Tutorial 1</a></li>
         <li><a href="https://www.youtube.com/watch?v=QYvi1akO_Po">Skymap Tutorial 2</a></li>
@@ -331,11 +367,11 @@ layout: default
     <h3>Satvik</h3>
     <p>
         Snowy Grass Instancing
-        <ul>
-            <li>
-                Satvik helped with getting the crisscrossing of 2D grass billboards to render. He also added snowy grass.
-            </li>
-        </ul>
+    <ul>
+        <li>
+            Satvik helped with getting the crisscrossing of 2D grass billboards to render. He also added snowy grass.
+        </li>
+    </ul>
     </p>
 
 </body>
